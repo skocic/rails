@@ -1,8 +1,11 @@
 FROM jesselang/debian-vagrant:jessie
 
+ENV DEBIAN_FRONTEND noninteractive
+ENV RAILS_ENV development
+
 RUN sed -i 's/deb.debian.org/ftp2.de.debian.org/g' /etc/apt/sources.list \
  && apt-get update -qq \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git curl libmysqld-dev imagemagick libmagickwand-dev \
+ && apt-get install -y -qq git curl libmysqld-dev imagemagick libmagickwand-dev \
     mysql-server memcached redis-server dnsmasq nginx apt-transport-https gnupg2 mysql-server-5.5 \
  && echo "address=/yogaeasy.de/127.0.0.1" > /etc/dnsmasq.d/yogaeasy.conf \
  && echo >> /etc/dnsmasq.conf \
@@ -26,7 +29,7 @@ RUN sed -i 's/deb.debian.org/ftp2.de.debian.org/g' /etc/apt/sources.list \
      # Turn on Passenger\n\
      passenger_enabled on;\n\
      passenger_ruby /home/vagrant/.rvm/gems/ruby-2.2.2/wrappers/ruby;\n\
-     passenger_app_env development;\n\
+     passenger_app_env ${RAILS_ENV};\n\
      passenger_sticky_sessions on;\n\
      passenger_sticky_sessions_cookie_name _pr;\n\
      passenger_min_instances 4;\n\
